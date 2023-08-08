@@ -42,8 +42,8 @@ RUN mkdir $APP_HOME/static
 RUN mkdir $APP_HOME/media
 WORKDIR $APP_HOME
 
-RUN apk update && apk upgrade
-RUN apk add build-essential
+RUN apt update -y
+RUN apt install -y build-essential
 
 
 # install dependencies
