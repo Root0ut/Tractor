@@ -28,7 +28,7 @@ services:
       MYSQL_PASSWORD: mysql
       MYSQL_PORT: 3306
       MYSQL_HOST: db
-      DJANGO_SETTINGS_MODULE: tractor.settings.dev
+      DJANGO_SETTINGS_MODULE: django_docker.settings.dev
     restart: always
     ports:
       - "8000:8000"
