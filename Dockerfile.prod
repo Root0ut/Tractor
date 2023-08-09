@@ -22,6 +22,8 @@ RUN pip install --upgrade pip
 RUN apk update && \
     apk add mariadb-dev pkgconf && \
     rm -rf /var/cache/apk/*
+RUN apk add --no-cache mariadb-connector-c-dev
+
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
 
