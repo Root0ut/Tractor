@@ -25,6 +25,7 @@ RUN apk update && \
 RUN apk update && \
     apk add python3 py3-pip mariadb-connector-c-dev && \
     rm -rf /var/cache/apk/*
+RUN apk add gcc musl-dev mariadb-connector-c-dev
 
 
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
