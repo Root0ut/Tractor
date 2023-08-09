@@ -19,16 +19,15 @@ RUN apk update \
 # install dependencies
 COPY ./requirements.txt .
 RUN pip install --upgrade pip
-# RUN apk update && \
-#     apk add mariadb-dev pkgconf && \
-#     rm -rf /var/cache/apk/*
-# RUN apk update && \
-#     apk add python3 py3-pip mariadb-connector-c-dev && \
-#     rm -rf /var/cache/apk/*
+RUN apk update && \
+    apk add mariadb-dev pkgconf && \
+    rm -rf /var/cache/apk/*
+RUN apk update && \
+    apk add python3 py3-pip mariadb-connector-c-dev && \
+    rm -rf /var/cache/apk/*\
 RUN apk update && \
     apk add build-base && \
     rm -rf /var/cache/apk/*
-
 RUN apk add musl-dev mariadb-connector-c-dev gcc && \
     pip install mysqlclient && \
     pip cache purge && \
