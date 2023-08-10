@@ -3,7 +3,7 @@ import pymysql
 
 pymysql.install_as_MySQLdb()
 
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS')
 
 DATABASES = {
