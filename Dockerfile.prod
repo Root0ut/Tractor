@@ -22,9 +22,8 @@ RUN pip install --upgrade pip
 RUN apk update && \
     apk add mariadb-dev pkgconf && \
     rm -rf /var/cache/apk/*
-# RUN apk update && \
-#     apk add python3-dev mariadb-dev && \
-#     rm -rf /var/cache/apk/*
+RUN apk update && \
+    apk add --no-cache mariadb-connector-c-dev gcc musl-dev
 RUN pip install mysqlclient --no-cache-dir --log pip_install_mysqlclient.txt
 
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
