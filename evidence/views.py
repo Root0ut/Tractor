@@ -13,7 +13,8 @@ def write(request):
         form=EvidenceForm(request.POST)
         if form.is_valid():
             evidence=form.save(commit=False)
-            evidence.attached=request.FILES["upload"]
+            if request.FILES.get('file') is not None:
+                evidence.attached=request.FILES["upload"]
             evidence.created_at=timezone.now()
             evidence.save()
             return redirect('evidence:lists')
