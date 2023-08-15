@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <!-- 로고 -->
+      <a class="navbar-brand" href="#">
+        <img src="로고 이미지 주소" alt="">
+      </a>
+      
+      <!-- 햄버거 버튼 -->
+      <button class="navbar-toggler" type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarToggle"
+              aria-controls="navbarToggle"
+              aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <!-- 메뉴 항목 -->
+      <div class="collapse navbar-collapse" id="navbarToggle">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="#">TROLL 추출</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">TROLL 보관함</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">오늘의 법률</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">내 정보</a>
+          </li>
+          <li class="nav-item">
+            {% if user.is_authenticated %}
+            <a class="nav-link" href="{% url 'user:logout' %}">{{ user.username }} (로그아웃)</a>
+            {% else %}
+            <a class="nav-link" href="{% url 'user:login' %}">로그인</a>
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  
