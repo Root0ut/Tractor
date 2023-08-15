@@ -2,6 +2,7 @@ from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
 from django.urls import re_path as url
+from django.views.static import serve
 
 
 urlpatterns = [
