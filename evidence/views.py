@@ -4,7 +4,7 @@ from django.http import HttpResponseNotAllowed
 from .models import Evidence
 from .forms import EvidenceForm
 
-def write(request, evidence_id):
+def write(request):
     if request.method=='GET':
         form=EvidenceForm()
         return render(request, 'evidence/evidence_form.html', {'form':form})
@@ -16,9 +16,9 @@ def write(request, evidence_id):
             evidence.attached=request.FILES["upload"]
             evidence.created_at=timezone.now()
             evidence.save()
-            return redirect('evidence:detail', evidence_id=evidence.id)
+            return redirect('evidence:lists')
 
-def list(request):
+def lists(request):
     evidence_list = Evidence.objects.order_by('-created_at')
     context = {'evidence_list': evidence_list}
     return render(request, 'evidence/evidence_list.html', context)
