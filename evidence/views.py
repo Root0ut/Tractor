@@ -18,10 +18,13 @@ def write(request, evidence_id):
             evidence.save()
             return redirect('evidence:detail', evidence_id=evidence.id)
 
-def index(request):
+def list(request):
     evidence_list = Evidence.objects.order_by('-created_at')
     context = {'evidence_list': evidence_list}
     return render(request, 'evidence/evidence_list.html', context)
+
+def index(request):
+    return render(request, 'evidence/index.html')
 
 def detail(request, pk):
     evidence=Evidence.objects.get(pk=pk)
