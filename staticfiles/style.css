@@ -1,0 +1,19 @@
+.navbar-brand img {
+    height: 50px;
+  }
+  
+  .navbar-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  
+  .navbar-nav .nav-link:last-child {
+    color: #007bff;
+    margin-left: auto;
+  }
+  
+  .navbar-nav .nav-link:last-child:hover {
+    color: #0056b3;
+  }
+  
