@@ -1,16 +1,13 @@
 {% block content %}
 
 {% if craw_list %}
-
-안녕하세요
-{{ craw_list }}
 {% for item in craw_list %}
 
 <tr>
-    <td>{{ item }}</td>
-    <!-- <td>{{ item.user_id }}</td>
+    <td>{{ item.link }}</td>
+    <td>{{ item.user_id }}</td>
     <td>{{ item.data }}</td>
-    <td>{{ item.comment }}</td> -->
+    <td>{{ item.comment }}</td>
 </tr>
 
 {% endfor %}

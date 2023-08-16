@@ -36,12 +36,11 @@ def craw_list(request):
                 craw_item.user_id=item['user_id']
                 craw_item.date=item['date']
                 craw_item.comment = item['comment']
-
-                print(craw_item.comment)
                 
-                craw_list.append(craw)
+                craw_list.append(craw_item)
+
                 context = {
-                    # 'craw_item' : craw_item, 
+                    'craw_item' : craw_item, 
                     'craw_list' : craw_list
                 }
 
