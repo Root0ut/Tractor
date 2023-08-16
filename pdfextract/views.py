@@ -3,12 +3,22 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from tractor.settings import STATICFILES_DIRS
 from .forms import UrlForm
+from .models import Url
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
 # import aspose.words as aw
 from PIL import Image
 from .models import Url
+#from django.shortcuts import render
+
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+import requests
+from bs4 import BeautifulSoup as bs
+import re
+os.environ.setdefault("DJANGO_SETTINGS_MODULE","config.settings")
+import django
+django.setup()
 
 
 # Create your views here.
@@ -25,9 +35,12 @@ def storage(request):
 def create(request):
     if request.method == 'POST':
         form = UrlForm(request.POST)
+        print(form)
         if form.is_valid():
             url = form.save(commit=False)
             url.pdfpath = STATICFILES_DIRS[0] + "\\" + str(url.id) #사용자 id
+        
+            
             url.save()
             return HttpResponseRedirect('/pdfextract/storage/')
     else:
@@ -145,3 +158,69 @@ def download(path):
         print(path)
         print("can't download")
         return 0
+    
+def craw_list(request):
+    input_url = request.GET.get('input_url')
+    keyword = request.GET.get('keyword')
+    craw_data_dict = craw(input_url)
+    craw_list=[]
+    for item in craw_data_dict:
+        if keyword in item['comment']:
+                craw_item=Url()
+
+                craw_item.link=item['link']
+                craw_item.user_id=item['user_id']
+                craw_item.date=item['date']
+                craw_item.comment = item['comment']
+                
+                craw_list.append(craw_item)
+
+                context = {
+                    'craw_item' : craw_item, 
+                    'craw_list' : craw_list
+                }
+
+    return render(request, 'craw/craw_list.html', context)
+
+def craw(url):
+
+    headers = [
+    {'User-Agent' : ''},
+    ]
+
+    page = requests.get(url, headers=headers[0])
+    soup = bs(page.text, 'html.parser')
+    
+    result = []
+
+    if url[8:22] == 'www.instiz.net':
+        elements = soup.select("td.comment_memo")
+
+        for element in elements:
+            writer = element.find('span', {'class': 'href'}).find('a').text
+            date = element.find('span', {'class': 'minitext'})['onmouseover']
+            comment = element.find('div', {'class': 'comment_line'}).text
+
+            data = {'link' : url,
+                    'user_id' : writer,
+                    'date' : re.sub("'", '', date[14:32]),
+                    'comment' : comment
+                    }
+            result.append(data)
+
+    elif url[8:23] == 'www.fmkorea.com':
+        elements = soup.select("ul.fdb_lst_ul > li")
+
+        for element in elements:
+            writer = element.find('div', {'class': 'meta'}).find('a', {'href': '#popup_menu_area'}).text
+            date = element.find('div', {'class': 'meta'}).find('span', {'class': 'date'}).text
+            comment = element.find('div', {'class': 'comment-content'}).find('div').text
+            
+            data = {'link' : url,
+                    'user_id' : writer,
+                    'date' : date,
+                    'comment' : comment
+                    }
+            result.append(data)
+    return result    
+
