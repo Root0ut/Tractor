@@ -35,14 +35,21 @@ def storage(request):
 def create(request):
     if request.method == 'POST':
         form = UrlForm(request.POST)
-        print(form)
         if form.is_valid():
             url = form.save(commit=False)
             url.pdfpath = STATICFILES_DIRS[0] + "\\" + str(url.id) #사용자 id
-        
+
+            craw_data_dict = craw(url.url)
+            print(craw_data_dict)
             
+            for item in craw_data_dict:
+                if url.keyword in item['comment']:
+                        url.link=item['link']
+                        url.user_id=item['user_id']
+                        url.date=item['date']
+                        url.comment = item['comment']
             url.save()
-            return HttpResponseRedirect('/pdfextract/storage/')
+        return HttpResponseRedirect('/pdfextract/storage/')
     else:
         form = UrlForm()
         return render(request, 'pdfextract/pdfextract_main.html', {'form':form}) 
