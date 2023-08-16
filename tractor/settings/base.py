@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'storages',
     'evidence', 
     'pdfextract',
+    'craw',
 ]
 
 MIDDLEWARE = [
