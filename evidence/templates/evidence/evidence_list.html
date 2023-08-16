@@ -1,4 +1,8 @@
+{% extends "base.html" %}
 {% block content %}
+<div class="container my-3 d-flex justify-content-end">
+    <a href="{% url 'evidence:write' %}" class="btn text-white" style="background-color: #782B28; margin-bottom:10px">증거 등록하기</a>
+</div>
 <div class="container my-3">
     <table class="table">
         <thead>
@@ -14,18 +18,17 @@
         <tr>
             <td>{{ forloop.counter }}</td>
             <td>
-                <a href="{{evidence.pk}}">{{ evidence.title }}</a>
+                <a href="/evidence/{{evidence.pk}}/">{{ evidence.title }}</a>
             </td>
             <td>{{ evidence.created_at }}</td>
         </tr>
         {% endfor %}
         {% else %}
         <tr>
-            <td colspan="3">질문이 없습니다.</td>
+            <td colspan="3">증거가 없습니다.</td>
         </tr>
         {% endif %}
         </tbody>
     </table>
-    <a href="{% url 'evidence:write' %}" class="btn btn-primary">증거 등록하기</a>
 </div>
 {% endblock %}
