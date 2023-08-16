@@ -23,9 +23,10 @@ RUN apk update && \
     apk add mariadb-dev pkgconf && \
     rm -rf /var/cache/apk/*
 RUN apk update && \
+    apk add --no-cache libffi-dev gcc musl-dev
+RUN apk update && \
     apk add --no-cache mariadb-connector-c-dev gcc musl-dev
 RUN pip install mysqlclient --no-cache-dir --log pip_install_mysqlclient.txt
-
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
 
@@ -58,6 +59,8 @@ RUN apk update && apk add libpq
 COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .
 RUN pip install --no-cache /wheels/*
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+RUN pip install pillow
 
 # copy entrypoint-prod.sh
 COPY ./config/docker/entrypoint.prod.sh $APP_HOME
