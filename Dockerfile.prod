@@ -56,7 +56,7 @@ RUN apk update && \
 # install dependencies
 RUN apk update && apk add libpq
 RUN apk update && \
-    apk add --no-cache libffi-dev
+    apk add --no-cache libffi-dev gcc musl-dev
 COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .
 RUN pip install --no-cache /wheels/*
