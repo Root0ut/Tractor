@@ -2,19 +2,24 @@
 {% extends "base.html" %}
 {% block content %}
 <div>
-    <h3>{{evidence.title}}</h3>
-    <p>{{evidence.content}}</p>
-    <p>{{evidence.created_at}}</p>
-    <p>죄 : {{evidence.get_crime_display}}</p>
-    
+    <div class="container my-3" style="width: 80%">
+        <div class="content-area mt-0 mb-4">
+          <h5 class="my-3 border-bottom pb-2">{{ evidence.title }}</h5>
+          <span style="font-size:small; color:red">{{ evidence.get_crime_display }}</span>
+          <p>{{ evidence.content }}</p> 
+          
+          <div class="container my-3 d-flex justify-content-end">
+            <span style="font-size: small;">{{ evidence.created_at }}</span></div>
     {% if evidence.attached %}
         <a href="{{ evidence.attached }}" class="btn btn-outline-dark" role="button" download>Download</a>
     {% endif %}
 
-    <button class="btn btn-sm" onclick="location.href='/evidence/update/{{evidence.pk}}'">수정</button>
-    <button class="btn btn-sm" onclick="location.href='/evidence/delete/{{evidence.pk}}'">삭제</button>
 
-    <a href="/evidence/">목록</a>
+    <button class="btn btn-outline-secondary"   onclick="location.href='/evidence/update/{{evidence.pk}}'">수정</button>
+    <button  class="btn text-white mr-2" style="background-color: #782B28;" onclick="location.href='/evidence/delete/{{evidence.pk}}'">삭제</button>
+    <div class="container my-3 d-flex justify-content-end">
+    <a href="/evidence/lists" class="btn text-white" style="background-color: #782B28;">목록</a>
+    </div>
     
 
 
