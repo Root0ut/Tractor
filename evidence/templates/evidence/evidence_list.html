@@ -14,14 +14,14 @@
         <tr>
             <td>{{ forloop.counter }}</td>
             <td>
-                <a href="{{evidence.pk}}">{{ evidence.title }}</a>
+                <a href="/evidence/{{evidence.pk}}/">{{ evidence.title }}</a>
             </td>
             <td>{{ evidence.created_at }}</td>
         </tr>
         {% endfor %}
         {% else %}
         <tr>
-            <td colspan="3">질문이 없습니다.</td>
+            <td colspan="3">증거가 없습니다.</td>
         </tr>
         {% endif %}
         </tbody>
