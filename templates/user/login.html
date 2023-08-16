@@ -15,7 +15,11 @@
             <input type="password" class="form-control" name="password" id="password"
                    value="{{ form.password.value|default_if_none:'' }}">
         </div>
-        <button type="submit" class="btn text-white" style="background-color: #782B28;">Login</button>
+        <div class="d-flex justify-content-start">
+            <button type="submit" class="btn text-white mr-2" style="background-color: #782B28;">Login</button>
+            <!-- Signup 버튼 추가 -->
+            <a href="{% url 'user:signup' %}" style="margin-left:10px" class="btn btn-outline-secondary">Signup</a>
+        </div>
     </form>
 </div>
 {% endblock %}
