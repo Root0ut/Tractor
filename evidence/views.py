@@ -5,6 +5,9 @@ from .models import Evidence
 from .forms import EvidenceForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.core.paginator import Paginator  
+from django.db.models import Q
+
 
 @login_required
 def write(request):
@@ -24,14 +27,25 @@ def write(request):
             return redirect('evidence:lists')
 
 def lists(request):
+    page = request.GET.get('page', '1')  # 페이지
+    kw = request.GET.get('kw', '')  # 검색어
     evidence_list = Evidence.objects.order_by('-created_at')
-    context = {'evidence_list': evidence_list}
+    if kw:
+        evidence_list = evidence_list.filter(
+            Q(title__icontains=kw) |  
+            Q(content__icontains=kw) |  
+            Q(crime__icontains=kw)
+        ).distinct()
+
+    paginator = Paginator(evidence_list, 10)  # 페이지당 10개씩 보여주기
+    page_obj = paginator.get_page(page)
+    context = {'evidence_list': page_obj, 'page': page, 'kw': kw}
     return render(request, 'evidence/evidence_list.html', context)
 
 def index(request):
     return render(request, 'evidence/index.html')
 
-@login_required
+@login_required(login_url='/user/login')
 def detail(request, pk):
     evidence=Evidence.objects.get(pk=pk)
     return render(request, 'evidence/evidence_detail.html', {'evidence':evidence})
@@ -44,3 +58,17 @@ def delete(request, pk):
             evidence.delete()
             return redirect('evidence:lists')
     return redirect('evidence:detail', evidence.pk)
+
+@login_required(login_url='/user/login')
+def update(request, pk):
+    evidence=Evidence.objects.get(pk=pk)
+    if request.method=="GET":
+        evidenceForm=EvidenceForm(instance=evidence)
+        context = {'form': evidenceForm}
+        return render(request, 'evidence/evidence_modify.html', context)
+    elif request.method=="POST":
+        evidenceForm=EvidenceForm(request.POST, instance=evidence)
+        if evidenceForm.is_valid():
+            evidence=evidenceForm.save(commit=False)
+            evidence.save()
+        return redirect('evidence:detail', evidence.pk)

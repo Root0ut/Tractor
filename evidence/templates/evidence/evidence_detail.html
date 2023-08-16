@@ -1,23 +1,25 @@
-<html>
-    <head>
-        <title>Posting!</title>
-    </head>
-    <body>
-        <h1>증거 개별 페이지입니다</h1>
-        <h3>{{evidence.title}}</h3>
-        <p>{{evidence.content}}</p>
-        <p>{{evidence.created_at}}</p>
-        <p>죄 : {{evidence.get_crime_display}}</p>
 
-        {% if evidence.attached %}
-            <a href="{{ evidence.attached }}" class="btn btn-outline-dark" role="button" download>Download</a>
-        {% endif %}
-        {% comment %} <a href="{% url 'evidence:update' evidence.pk %}">[수정]</a> {% endcomment %}
-        <form action="{% url 'evidence:delete' evidence.pk %}" method="POST">
-          {% csrf_token %}
-          <input type="submit" value="삭제">
-        </form>
-        <a href="/evidence/">목록</a>
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h3>{{evidence.title}}</h3>
+    <p>{{evidence.content}}</p>
+    <p>{{evidence.created_at}}</p>
+    <p>죄 : {{evidence.get_crime_display}}</p>
+    
+    {% if evidence.attached %}
+        <a href="{{ evidence.attached }}" class="btn btn-outline-dark" role="button" download>Download</a>
+    {% endif %}
 
-    </body>
-</html>
+    <button class="btn btn-sm" onclick="location.href='/evidence/update/{{evidence.pk}}'">수정</button>
+    <button class="btn btn-sm" onclick="location.href='/evidence/delete/{{evidence.pk}}'">삭제</button>
+
+    <a href="/evidence/">목록</a>
+    
+
+
+</div>
+
+
+{% endblock %}
+
