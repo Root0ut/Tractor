@@ -25,9 +25,6 @@ RUN apk update && \
 RUN apk update && \
     apk add --no-cache libffi-dev gcc musl-dev
 RUN apk update && \
-    apk add --no-cache build-base jpeg-dev zlib-dev postgresql-dev libffi-dev
-
-RUN apk update && \
     apk add --no-cache mariadb-connector-c-dev gcc musl-dev
 RUN pip install mysqlclient --no-cache-dir --log pip_install_mysqlclient.txt
 
