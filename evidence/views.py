@@ -31,7 +31,7 @@ def lists(request):
 def index(request):
     return render(request, 'evidence/index.html')
 
-@login_required
+@login_required(login_url='/user/login')
 def detail(request, pk):
     evidence=Evidence.objects.get(pk=pk)
     return render(request, 'evidence/evidence_detail.html', {'evidence':evidence})
@@ -44,3 +44,17 @@ def delete(request, pk):
             evidence.delete()
             return redirect('evidence:lists')
     return redirect('evidence:detail', evidence.pk)
+
+@login_required(login_url='/user/login')
+def update(request, pk):
+    evidence=Evidence.objects.get(pk=pk)
+    if request.method=="GET":
+        evidenceForm=EvidenceForm(instance=evidence)
+        context = {'form': evidenceForm}
+        return render(request, 'evidence/evidence_modify.html', context)
+    elif request.method=="POST":
+        evidenceForm=EvidenceForm(request.POST, instance=evidence)
+        if evidenceForm.is_valid():
+            evidence=evidenceForm.save(commit=False)
+            evidence.save()
+        return redirect('evidence:detail', evidence.pk)
