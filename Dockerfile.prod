@@ -60,7 +60,7 @@ RUN apk update && apk add libpq
 COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache /wheels/*
+# RUN pip install --no-cache /wheels/*
 
 # copy entrypoint-prod.sh
 COPY ./config/docker/entrypoint.prod.sh $APP_HOME
