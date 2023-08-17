@@ -9,7 +9,7 @@ class Url(models.Model):
     user_id = models.TextField(null=True)
     date = models.TextField(null=True)
     comment = models.TextField(null=True)
-    keyword = models.CharField(max_length=100, blank=False)
+    keyword = models.CharField(max_length=100, blank=False, null=True)
     
     category_choices=[
         ('선택', None),
