@@ -31,7 +31,7 @@ def write(request):
             # evidence.crime=crime_data
             evidence.save()
             return redirect('evidence:lists')
-
+@login_required(login_url='/user/login')
 def lists(request):
     search_kind=request.GET.get('searchKind','전체')
     print(search_kind)
