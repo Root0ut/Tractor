@@ -20,6 +20,13 @@
 
 
     <button class="btn btn-outline-secondary"   onclick="location.href='/evidence/update/{{evidence.pk}}'">수정</button>
+    <div id="modal" class="modal fade">
+        <div id="dialog" class="modal-dialog" hx-target="this"></div>
+    </div>
+
+    <button hx-get="{% url 'evidence:get_second_pw' %}" hx-target="#dialog">
+        Add a movie
+      </button>
     <button  class="btn text-white mr-2" style="background-color: #782B28;" onclick="location.href='/evidence/delete/{{evidence.pk}}'">삭제</button>
     <div class="container my-3 d-flex justify-content-end">
     <a href="/evidence/lists" class="btn text-white" style="background-color: #782B28;">목록</a>
@@ -28,7 +35,36 @@
 
 
 </div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!-- HTMX -->
+<script src="https://unpkg.com/htmx.org@1.6.0"></script>
+<script>
+    const modal = new bootstrap.Modal(document.getElementById("modal"))
 
+    htmx.on("htmx:beforeSwap", (e) => {
+        // Empty response targeting #dialog => hide the modal
+        if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
+          modal.hide()
+          e.detail.shouldSwap = false
+        }
+      })
+
+    htmx.on("hidden.bs.modal", () => {
+        document.getElementById("dialog").innerHTML = ""
+      })  
+      
+
+    htmx.on("htmx:afterSwap", (e) => {
+      // Response targeting #dialog => show the modal
+      if (e.detail.target.id == "dialog") {
+        modal.show()
+      }
+    })
+
+
+</script>
 
 {% endblock %}
 
