@@ -5,7 +5,17 @@
 </div>
 <div class="container my-3">
     <div class="row my-3">
-        <div class="col-6">
+        <div class="col-1">
+            <select class="form-select form-select-sm" name="search_kinds" id="search_kind">
+                {% for crime in crimes %}
+                <option value="{{crime}}" {% if  crime == select_crime %}selected{% endif %}>
+                {{crime}}
+                </option>
+                {% endfor %}
+    
+            </select>
+        </div>
+        <div class="col-6 justify-content-end" style="float:right;">
             <div class="input-group">
                 <input type="text" id="search_kw" class="form-control" value="{{ kw|default_if_none:'' }}">
                 <div class="input-group-append">
@@ -13,17 +23,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-1">
-        <select class="selectpicker" name="search_kinds" id="search_kind">
-            {% for crime in crimes %}
-            <option value="{{crime}}" {% if  crime == select_crime %}selected{% endif %}>
-            {{crime}}
-            </option>
-            {% endfor %}
 
-        </select>
     </div>
+
     
     <table class="table">
         <thead>
