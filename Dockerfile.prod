@@ -62,7 +62,7 @@ RUN pip install pillow
 RUN pip install charset_normalizer
 COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .
-# RUN pip install --no-cache /wheels/*
+RUN pip install --no-cache /wheels/*
 # RUN apk update && \
 #     apk add --no-cache wget unzip chromium
 # RUN apk update && \
