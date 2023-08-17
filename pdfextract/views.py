@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render
 from tractor.settings import STATICFILES_DIRS
 from .forms import UrlForm
 from .models import Url
+from django.db.models import Q
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
@@ -28,16 +29,15 @@ def index(request):
 
 def storage(request):
     if request.user.is_authenticated:
-        print("hi")
         page = request.GET.get('page', '1')
         kw = request.GET.get('kw', '')
         url_list = Url.objects.order_by('-create_date')           
         if kw:
             url_list = url_list.filter(
-                Url(link__icontains=kw) | 
-                Url(date__icontains=kw) |  
-                Url(comment__icontains=kw) |  
-                Url(user_id__icontains=kw) 
+                Q(url__icontains=kw) | 
+                Q(date__icontains=kw) |  
+                Q(comment__icontains=kw) |  
+                Q(user_id__icontains=kw) 
             ).distinct()
         paginator = Paginator(url_list, 10) 
         page_obj = paginator.get_page(page)
@@ -81,7 +81,7 @@ def create(request):
                     url_item.save()
 
         return HttpResponseRedirect('/pdfextract/storage/')
->>>>>>> d051de3971e0f9f08cbb239bebf1af48ea61e36e
+
     else:
         return render(request, 'user/login.html')
     
