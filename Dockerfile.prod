@@ -63,6 +63,16 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 RUN pip install pillow
 RUN pip install charset_normalizer
 
+RUN apk update && \
+    apk add --no-cache wget unzip chromium
+RUN apk update && \
+    apk add --no-cache curl
+
+RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip && \
+    unzip /tmp/chromedriver.zip -d /usr/src && \
+    rm /tmp/chromedriver.zip
+
+
 # copy entrypoint-prod.sh
 COPY ./config/docker/entrypoint.prod.sh $APP_HOME
 
