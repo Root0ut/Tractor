@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'pdfextract',
     'craw',
     'myinfo',
+    'user',
     'debug_toolbar'
 ]
 
