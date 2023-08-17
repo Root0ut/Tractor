@@ -30,19 +30,36 @@ def write(request):
             return redirect('evidence:lists')
 
 def lists(request):
+    search_kind=request.GET.get('searchKind','전체')
+    print(search_kind)
     page = request.GET.get('page', '1')  # 페이지
     kw = request.GET.get('kw', '')  # 검색어
-    evidence_list = Evidence.objects.order_by('-created_at')
+    crimes=['전체', '모욕', '명예훼손', '음란','기타']
+    evidence_list = Evidence.objects.filter(user=request.user)
     if kw:
-        evidence_list = evidence_list.filter(
-            Q(title__icontains=kw) |  
-            Q(content__icontains=kw) |  
-            Q(crime__icontains=kw)
-        ).distinct()
+        if search_kind == '전체':
+            print("전체")
+            evidence_list = evidence_list.filter(
+                Q(title__icontains=kw) |  
+                Q(content__icontains=kw)
+            ).distinct()
+        else:
+            print("else")
+            evidence_list = evidence_list.filter(
+                Q(title__icontains=kw) |  
+                Q(content__icontains=kw) |  
+                Q(crime__icontains=search_kind)
+            ).distinct()
+    elif search_kind == '전체':
+        evidence_list = Evidence.objects.filter(user=request.user)
+    else:
+        evidence_list = evidence_list.filter( 
+                    Q(crime__icontains=search_kind)
+                ).distinct()
 
     paginator = Paginator(evidence_list, 10)  # 페이지당 10개씩 보여주기
     page_obj = paginator.get_page(page)
-    context = {'evidence_list': page_obj, 'page': page, 'kw': kw}
+    context = {'evidence_list': page_obj, 'page': page, 'kw': kw, 'select_crime':search_kind, 'crimes':crimes}
     return render(request, 'evidence/evidence_list.html', context)
 
 def index(request):
