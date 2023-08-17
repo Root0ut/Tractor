@@ -48,7 +48,13 @@ def create(request):
                         url.user_id=item['user_id']
                         url.date=item['date']
                         url.comment = item['comment']
-            url.save()
+                        url.save()
+                elif url.keyword not in item['comment']:
+                    url.link=item['link']
+                    url.user_id='None'
+                    url.date='None'
+                    url.keyword = 'None'
+                    url.save()
         return HttpResponseRedirect('/pdfextract/storage/')
     else:
         form = UrlForm()
