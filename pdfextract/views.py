@@ -42,15 +42,18 @@ def create(request):
             url.pdfpath = STATICFILES_DIRS[0] + "\\" + str(url.id) #사용자 id
 
             craw_data_dict = craw(url.url)
-            print(craw_data_dict)
-            
             for item in craw_data_dict:
-                if url.keyword in item['comment']:
-                        url.link=item['link']
-                        url.user_id=item['user_id']
-                        url.date=item['date']
-                        url.comment = item['comment']
-                        url.save()
+                if url.keyword in item['comment']:    
+                    url_item=Url()          
+                    url_item.url=item['link']
+                    url_item.user_id=item['user_id']
+                    url_item.date=item['date']
+                    url_item.comment = item['comment']
+                    url_item.pdfpath = url.pdfpath
+                    url_item.category = url.category
+                    url_item.keyword = url.keyword
+                    url_item.save()
+
         return HttpResponseRedirect('/pdfextract/storage/')
     else:
         form = UrlForm()
