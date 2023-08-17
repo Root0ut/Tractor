@@ -28,6 +28,7 @@ def write(request):
             # evidence.crime=crime_data
             evidence.save()
             return redirect('evidence:lists')
+     
 @login_required(login_url='/user/login')
 def lists(request):
     search_kind=request.GET.get('searchKind','전체')
@@ -71,6 +72,7 @@ def detail(request, pk):
     evidence=Evidence.objects.get(pk=pk)
     return render(request, 'evidence/evidence_detail.html', {'evidence':evidence})
 
+@login_required(login_url='/user/login')
 def delete(request, pk):
     evidence=get_object_or_404(Evidence, pk=pk)
     if request.user.is_authenticated:
