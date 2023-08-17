@@ -8,6 +8,8 @@ import bcrypt
 from user.models import UserSecondPw
 from user.forms import UserSecondForm
 
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 
 def index(request):
     return render(request, 'myinfo/myinfo.html')
@@ -35,3 +37,11 @@ def get_second_pw(request):
     return render(request, 'movie_form.html', {
         'form': form,
     })
+@csrf_exempt
+def save_survey(request):
+    dto = Answer(username=request.POST["username"],
+                 survey_idx=request.POST["survey_idx"], num=request.POST["num"])
+    dto.save()
+    
+
+    return redirect('myinfo:feedback')

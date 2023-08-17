@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render
 from tractor.settings import STATICFILES_DIRS
 from .forms import UrlForm
 from .models import Url
+from django.db.models import Q
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
@@ -27,38 +28,83 @@ def index(request):
     return render(request, 'pdfextract/pdfextract_main.html', {'form':form})
 
 def storage(request):
-    page = request.GET.get('page', '1')
-    url_list = Url.objects.order_by('-create_date')
-    paginator = Paginator(url_list, 10) 
-    page_obj = paginator.get_page(page)
-    context = {'url_list': page_obj}
-    return render(request, 'pdfextract/pdfextract_storage.html', context)
-
-def create(request):
-    if request.method == 'POST' :
-        form = UrlForm(request.POST)
-        if form.is_valid():
-            url = form.save(commit=False)
-            url.pdfpath = STATICFILES_DIRS[0] + "\\" + str(url.id) #사용자 id
-
-            craw_data_dict = craw(url.url)
-            for item in craw_data_dict:
-                if url.keyword in item['comment']:    
-                    url_item=Url()          
-                    url_item.url=item['link']
-                    url_item.user_id=item['user_id']
-                    url_item.date=item['date']
-                    url_item.comment = item['comment']
-                    url_item.pdfpath = url.pdfpath
-                    url_item.category = url.category
-                    url_item.keyword = url.keyword
-                    url_item.save()
-
-        return HttpResponseRedirect('/pdfextract/storage/')
+    if request.user.is_authenticated:
+        search_kind=request.GET.get('searchKind','전체')
+        print(search_kind)
+        page = request.GET.get('page', '1')
+        kw = request.GET.get('kw', '')
+        url_list = Url.objects.order_by('-create_date')    
+        crimes=['전체', '모욕죄', '명예훼손죄', '음란죄']       
+        if kw:
+            print(kw)
+            if search_kind == '전체':
+                url_list = url_list.filter(
+                    Q(url__icontains=kw) | 
+                    Q(date__icontains=kw) |  
+                    Q(comment__icontains=kw) |  
+                    Q(user_id__icontains=kw) 
+                ).distinct()
+            else:
+                url_list = url_list.filter(
+                    Q(category__icontains=search_kind) &
+                    (Q(url__icontains=kw) | 
+                    Q(date__icontains=kw) |  
+                    Q(comment__icontains=kw) |  
+                    Q(user_id__icontains=kw) )
+                ).distinct()
+            
+        paginator = Paginator(url_list, 10) 
+        page_obj = paginator.get_page(page)
+        context = {'url_list': page_obj, 'page': page, 'kw': kw, 'select_crime':search_kind, 'crimes':crimes}
+        return render(request, 'pdfextract/pdfextract_storage.html', context)
     else:
-        form = UrlForm()
-        return render(request, 'pdfextract/pdfextract_main.html', {'form':form}) 
+        return render(request, 'user/login.html')
 
+    
+def create(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = UrlForm(request.POST)
+            if form.is_valid():
+                url = form.save(commit=False)
+                url.pdfpath = STATICFILES_DIRS[0] + "\\" + str(url.id) #사용자 id
+
+                craw_data_dict = craw(url.url)
+                keyword_none = []
+                
+                for item in craw_data_dict:
+                    if url.keyword in item['comment']:
+                        keyword_none.append(url.keyword)
+                print(keyword_none)
+                if keyword_none == []:
+                    url.keyword = 'None'
+                    url.link=item['link']
+                    url.user_id='None'
+                    url.date='None'
+                    url.comment = 'None'
+                    url.currentuser = request.user
+                    url.save()
+                    
+                else:
+                    for item in craw_data_dict:
+                        if url.keyword in item['comment']:    
+                            url_item=Url()          
+                            url_item.url=item['link']
+                            url_item.user_id=item['user_id']
+                            url_item.date=item['date']
+                            url_item.comment = item['comment']
+                            url_item.pdfpath = url.pdfpath
+                            url_item.category = url.category
+                            url_item.keyword = url.keyword
+                            url_item.currentuser = request.user
+                            url_item.save()
+            return HttpResponseRedirect('/pdfextract/storage/')
+        else:
+            form = UrlForm()
+            return render(request, 'pdfextract/pdfextract_main.html', {'form':form}) 
+    else:
+        return render(request, 'user/login.html')
+    
 def delete(request,pk):
     url = get_object_or_404(Url,id=pk)
     if request.user.is_authenticated:
@@ -178,29 +224,6 @@ def download(path):
         print(path)
         print("can't download")
         return 0
-    
-def craw_list(request):
-    input_url = request.GET.get('input_url')
-    keyword = request.GET.get('keyword')
-    craw_data_dict = craw(input_url)
-    craw_list=[]
-    for item in craw_data_dict:
-        if keyword in item['comment']:
-                craw_item=Url()
-
-                craw_item.link=item['link']
-                craw_item.user_id=item['user_id']
-                craw_item.date=item['date']
-                craw_item.comment = item['comment']
-                
-                craw_list.append(craw_item)
-
-                context = {
-                    'craw_item' : craw_item, 
-                    'craw_list' : craw_list
-                }
-
-    return render(request, 'craw/craw_list.html', context)
 
 def craw(url):
 

@@ -49,9 +49,10 @@ def lists(request):
         else:
             print("else")
             evidence_list = evidence_list.filter(
-                Q(title__icontains=kw) |  
-                Q(content__icontains=kw) |  
-                Q(crime__icontains=search_kind)
+                Q(crime__icontains=search_kind) &
+                (Q(title__icontains=kw) |  
+                Q(content__icontains=kw) )
+                
             ).distinct()
     elif search_kind == '전체':
         evidence_list = Evidence.objects.filter(user=request.user)
