@@ -7,4 +7,5 @@ class EvidenceForm(forms.ModelForm):
     class Meta:
         model=Evidence
         fields=['title', 'content', 'crime']
+        # fields=['title', 'content']
         exclude=['attached']

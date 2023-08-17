@@ -11,6 +11,7 @@ from django.db.models import Q
 
 @login_required
 def write(request):
+    # crime_data = request.GET.get('crime')
     if request.method=='GET':
         form=EvidenceForm()
         return render(request, 'evidence/evidence_form.html', {'form':form})
@@ -23,6 +24,7 @@ def write(request):
             if request.FILES.get('file') is not None:
                 evidence.attached=request.FILES["upload"]
             evidence.created_at=timezone.now()
+            # evidence.crime=crime_data
             evidence.save()
             return redirect('evidence:lists')
 
@@ -50,7 +52,6 @@ def detail(request, pk):
     evidence=Evidence.objects.get(pk=pk)
     return render(request, 'evidence/evidence_detail.html', {'evidence':evidence})
 
-@require_POST
 def delete(request, pk):
     evidence=get_object_or_404(Evidence, pk=pk)
     if request.user.is_authenticated:
