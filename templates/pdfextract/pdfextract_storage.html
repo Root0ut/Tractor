@@ -14,18 +14,19 @@
   </head>
   <body>
     <div class="container my-3">
-      <table class="table">
+      <table class="table" style="table-layout: fixed";>
         <thead>
           <tr class="table-dark">
-            <th scope="col"> 
+            <th scope="col" width="4%"> 
               {% comment %} <input type="checkbox" name="pdf_list" value="selectall" onclick="selectAll(this)"> {% endcomment %}
             </th>
-            <th scope="col">수집 링크</th>
-            <th scope="col">작성자 ID</th>
-            <th scope="col">작성일</th>
-            <th scope="col">키워드</th>
-            <th scope="col">카테고리</th>
-            <th scope="col">PDF</th>
+            <th scope="col" width="25%">수집 링크</th>
+            <th scope="col" width="10%">작성자 ID</th>
+            <th scope="col" width="10%">작성일</th>
+            <th scope="col" width="10%">키워드</th>
+            <th scope="col" width="10%">카테고리</th>
+            <th scope="col" width="10%">추출</th>
+            <th scope="col" width="10%">삭제</th>
           </tr>
         </thead>
         {% if url_list %}
@@ -37,18 +38,17 @@
               {% csrf_token %}
                 <input type="checkbox" name="box" value="{{url.id}}">
             </th>
-            <th scope="col">
-                <ul>             
-                    {{ url.url }}
-                </ul>
-            </th>
-            <th scope="col">{{url.user_id}}</th>
+            <th scope="col">{{ url.url }}</th>
+            <th scope="col">{{ url.user_id }}</th>
             <th scope="col">{{ url.date }}</th>
             <th scope="col">{{ url.keyword }}</th>
-            <th scope="col">카테고리</th>
+            <th scope="col">{{ url.category }}</th>
             <td>
-                <button type="submit" class="btn btn-primary" style="background-color: #782B28; margin-bottom:10px">추출</button>
-              </form>
+              <button type="submit" name="btn_extract" class="btn btn-primary" style="background-color: #782B28; margin-bottom:10px">추출</button>
+            </form>
+            </td>
+            <td>
+              <button type="submit" name="btn_delete" class="btn btn-primary" style="background-color: #782B28; margin-bottom:10px" onclick="location.href='/pdfextract/delete/{{url.pk}}'">삭제</button>
             </td>
           </tr>
         {% endfor %}
@@ -57,4 +57,9 @@
         {% endif %}
       </table>
     </body>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script>
+  const selectAll = document.getParameter("pdf_list");
+
+</script>
 {% endblock %}

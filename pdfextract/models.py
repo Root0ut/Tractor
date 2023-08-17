@@ -11,5 +11,19 @@ class Url(models.Model):
     comment = models.TextField(null=True)
     keyword = models.CharField(max_length=100, null=True)
     
+    category_choices=[
+        ('선택', None),
+        ('모욕죄', '모욕죄'),
+        ('명예훼손죄', '명예훼손죄'),
+        ('음란죄', '음란죄'),
+    ]
+    
+    category = models.CharField(
+        max_length=10,
+        choices = category_choices,
+        default='선택',
+    )
+    
+    
     def __str__(self):
         return self.url

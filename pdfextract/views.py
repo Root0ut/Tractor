@@ -1,6 +1,6 @@
 import os
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from tractor.settings import STATICFILES_DIRS
 from .forms import UrlForm
 from .models import Url
@@ -33,7 +33,7 @@ def storage(request):
 
 
 def create(request):
-    if request.method == 'POST':
+    if request.method == 'POST' :
         form = UrlForm(request.POST)
         if form.is_valid():
             url = form.save(commit=False)
@@ -54,8 +54,16 @@ def create(request):
         form = UrlForm()
         return render(request, 'pdfextract/pdfextract_main.html', {'form':form}) 
 
+def delete(request,pk):
+    url = get_object_or_404(Url,id=pk)
+    if request.user.is_authenticated:
+        url.delete()
+        return HttpResponseRedirect('/pdfextract/storage/')
+    return HttpResponseRedirect('/pdfextract/storage/')
+
+
 def extract(request):
-    if request.method == "POST":
+    if request.method == "POST" and 'btn_extract' in request.POST:
         i = request.POST.getlist('box')[0]
         url = Url.objects.get(id=i) #id에 맞는 url 값
         p = Url.objects.get(id=i).pdfpath
