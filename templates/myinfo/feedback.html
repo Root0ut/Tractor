@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<html>
+<head>
+	<title>내 정보 페이지</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'infoStyle.css' %}">
+    <script type="text/javascript">
+        function show_result(){
+            location.href="show_result?survey_idx={{survey.survey_idx}}";
+        }
+
+    </script>
+</head>
+<body>
+    <div>
+	<nav>
+	  	<ul>
+	    	<li>
+            {% if user.is_authenticated %}
+                <a class="nav-link" href="{% url 'user:logout' %}"> 로그아웃</a>
+            {% else %}
+                <a class="nav-link" href="{% url 'user:login' %}">로그인</a>
+                {% endif %}
+            </li>
+	    	<li>
+              <a href="#">회원 탈퇴</a></li>
+	    	<li> 
+            <a href="#">2차 인증 설정</a></li>
+            <li>
+                <a href="/myinfo/feedback/#">피드백</a></li>
+	  	</ul>
+	</nav>
+    </div>
+    <div style="padding-top:100px; padding-left:70px;">
+	    <h4>설문조사</h4>
+        <br>
+        {% if survey_list %}
+        {% for survey in survey_list %}
+        <div class="card my-3" style="width:80%; margin-top:20%;margin-left:5%"; >
+            <div class="card-body;">
+                <div class="position-relative">
+                    <div class="review-content-area mt-0 mb-4" style="padding-top: 1%">
+                        <div class="card-text">
+        <form method="post" action="save_survey">
+            {% csrf_token %}
+            <div class="fw-bolder strong mt-2"> {{ forloop.counter }}.
+                {{survey.question}}</div>
+        <br>
+            <input type="radio" name="num" value="1"> {{survey.ans1}}<br>
+            <input type="radio" name="num" value="2"> {{survey.ans2}}<br>
+            <input type="radio" name="num" value="3"> {{survey.ans3}}<br>
+            <input type="radio" name="num" value="4"> {{survey.ans4}}<br>
+            <input type="radio" name="num" value="5"> {{survey.ans5}}<br>
+            <input type="hidden" name="survey_idx" value="{{survey.survey_idx}}">
+
+            <button type="submit" class="btn text-white mr-2" style="background-color: #782B28; margin-top:20px">투표</button>
+        </form>
+    </div></div></div></div></div>
+        {% endfor %}
+        {% else %}
+        설문이 등록되지 않았습니다.
+        {% endif %}
+    </body>
+</html>
+
+{% endblock %}

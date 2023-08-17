@@ -11,7 +11,11 @@
           <div class="container my-3 d-flex justify-content-end">
             <span style="font-size: small;">{{ evidence.created_at }}</span></div>
     {% if evidence.attached %}
-        <a href="{{ evidence.attached }}" class="btn btn-outline-dark" role="button" download>Download</a>
+        {% comment %} <span>{{ evidence.file_name }}</span>     {% endcomment %}
+
+        <div class="container my-3 d-flex justify-content-end">
+            <a href="{{ evidence.attached }}" download>{{ evidence.file_name }}</a></div>
+        
     {% endif %}
 
 

@@ -53,6 +53,7 @@ def create(request):
                     url_item.category = url.category
                     url_item.keyword = url.keyword
                     url_item.save()
+
         return HttpResponseRedirect('/pdfextract/storage/')
     else:
         form = UrlForm()

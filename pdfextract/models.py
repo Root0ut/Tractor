@@ -10,6 +10,7 @@ class Url(models.Model):
     date = models.TextField(null=True)
     comment = models.TextField(null=True)
     keyword = models.CharField(max_length=100,null=True, blank=False)
+
     
     category_choices=[
         (None, None),
