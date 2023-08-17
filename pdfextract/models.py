@@ -15,7 +15,6 @@ class Url(models.Model):
     
     category_choices=[
         (None, None),
-
         ('모욕죄', '모욕죄'),
         ('명예훼손죄', '명예훼손죄'),
         ('음란죄', '음란죄'),

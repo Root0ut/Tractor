@@ -29,19 +29,33 @@ def index(request):
 
 def storage(request):
     if request.user.is_authenticated:
+        search_kind=request.GET.get('searchKind','전체')
+        print(search_kind)
         page = request.GET.get('page', '1')
         kw = request.GET.get('kw', '')
-        url_list = Url.objects.order_by('-create_date')           
+        url_list = Url.objects.order_by('-create_date')    
+        crimes=['전체', '모욕죄', '명예훼손죄', '음란죄']       
         if kw:
-            url_list = url_list.filter(
-                Q(url__icontains=kw) | 
-                Q(date__icontains=kw) |  
-                Q(comment__icontains=kw) |  
-                Q(user_id__icontains=kw) 
-            ).distinct()
+            print(kw)
+            if search_kind == '전체':
+                url_list = url_list.filter(
+                    Q(url__icontains=kw) | 
+                    Q(date__icontains=kw) |  
+                    Q(comment__icontains=kw) |  
+                    Q(user_id__icontains=kw) 
+                ).distinct()
+            else:
+                url_list = url_list.filter(
+                    Q(category__icontains=search_kind) &
+                    (Q(url__icontains=kw) | 
+                    Q(date__icontains=kw) |  
+                    Q(comment__icontains=kw) |  
+                    Q(user_id__icontains=kw) )
+                ).distinct()
+            
         paginator = Paginator(url_list, 10) 
         page_obj = paginator.get_page(page)
-        context = {'url_list': page_obj, 'page': page, 'kw': kw}
+        context = {'url_list': page_obj, 'page': page, 'kw': kw, 'select_crime':search_kind, 'crimes':crimes}
         return render(request, 'pdfextract/pdfextract_storage.html', context)
     else:
         return render(request, 'user/login.html')
