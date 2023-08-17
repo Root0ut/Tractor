@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 <html>
 <head>
 	<title>내 정보 페이지</title>
-	<style>
-		
-	</style>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'infoStyle.css' %}">
+
 </head>
 <body>
 	<nav>
@@ -18,14 +19,11 @@
                 {% endif %}
             </li>
 	    	<li>
-             
-                    <a href="#">회원 탈퇴</a></li>
+              <a href="#">회원 탈퇴</a></li>
 	    	<li> 
-          
-                <a href="#">2차 인증 설정</a></li>
+            <a href="#">2차 인증 설정</a></li>
             <li>
-              
-                <a href="#">피드백</a></li>
+              <a href="/myinfo/feedback/#">피드백</a></li>
 	  	</ul>
 	</nav>
 	<section>
@@ -34,41 +32,4 @@
 </body>
 </html>
 
-<style>
-    nav {
-        position: fixed;
-        left: 0;
-        background-color: #f1f1f1;
-        font-size:17px;
-      }
-      
-    
-      nav li {
-        display: inline-block;
-        font-size:17px;
-     
-      }
-      
-      nav li:last-child {
-        border-right: none;
-      }
-        
-      nav ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        justify-content: space-around;
-  }
-  nav li a {
-    display: block;
-    color: #666;
-    font-size: 18px;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-  }
-  
-    
-</style>
 {% endblock %}

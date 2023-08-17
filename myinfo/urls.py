@@ -4,4 +4,5 @@ app_name='myinfo'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('feedback/', views.feedback, name='feedback'),
 ]
