@@ -6,10 +6,10 @@
 	<title>내 정보 페이지</title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="{% static 'infoStyle.css' %}">
-
 </head>
 <body>
 	<nav>
+        <div class="info">
 	  	<ul>
 	    	<li>
             {% if user.is_authenticated %}
@@ -18,13 +18,12 @@
                 <a class="nav-link" href="{% url 'user:login' %}">로그인</a>
                 {% endif %}
             </li>
-	    	<li>
-              <a href="#">회원 탈퇴</a></li>
 	    	<li> 
             <a href="/myinfo/second_auth">2차 인증 설정</a></li>
             <li>
               <a href="/myinfo/feedback/#">피드백</a></li>
 	  	</ul>
+        </div>
 	</nav>
 	<section>
 	  

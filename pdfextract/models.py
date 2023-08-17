@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 class Url(models.Model):
@@ -10,11 +11,10 @@ class Url(models.Model):
     date = models.TextField(null=True)
     comment = models.TextField(null=True)
     keyword = models.CharField(max_length=100,null=True, blank=False)
-
+    currentuser=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,null=True)
     
     category_choices=[
         (None, None),
-
         ('모욕죄', '모욕죄'),
         ('명예훼손죄', '명예훼손죄'),
         ('음란죄', '음란죄'),
