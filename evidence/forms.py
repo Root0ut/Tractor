@@ -6,6 +6,5 @@ class EvidenceForm(forms.ModelForm):
                            widget=forms.FileInput(attrs={}))
     class Meta:
         model=Evidence
-        fields=['title', 'content', 'crime']
-        # fields=['title', 'content']
+        fields=['title', 'content']
         exclude=['attached']
