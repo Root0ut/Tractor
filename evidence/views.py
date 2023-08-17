@@ -39,14 +39,14 @@ def lists(request):
     page = request.GET.get('page', '1')  # 페이지
     kw = request.GET.get('kw', '')  # 검색어
     crimes=['전체', '모욕', '명예훼손', '음란','기타']
-    evidence_list = Evidence.objects.filter(user=request.user)
+    evidence_list = Evidence.objects.filter(user=request.user).order_by('-created_at')
     if kw:
         if search_kind == '전체':
             print("전체")
             evidence_list = evidence_list.filter(
                 Q(title__icontains=kw) |  
                 Q(content__icontains=kw)
-            ).distinct()
+            ).distinct().order_by('-created_at')
         else:
             print("else")
             evidence_list = evidence_list.filter(
@@ -54,13 +54,13 @@ def lists(request):
                 (Q(title__icontains=kw) |  
                 Q(content__icontains=kw) )
                 
-            ).distinct()
+            ).distinct().order_by('-created_at')
     elif search_kind == '전체':
-        evidence_list = Evidence.objects.filter(user=request.user)
+        evidence_list = Evidence.objects.filter(user=request.user).order_by('-created_at')
     else:
         evidence_list = evidence_list.filter( 
                     Q(crime__icontains=search_kind)
-                ).distinct()
+                ).distinct().order_by('-created_at')
 
     paginator = Paginator(evidence_list, 10)  # 페이지당 10개씩 보여주기
     page_obj = paginator.get_page(page)
