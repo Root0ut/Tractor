@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render
 from tractor.settings import STATICFILES_DIRS
 from .forms import UrlForm
 from .models import Url
+from django.db.models import Q
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
@@ -28,16 +29,15 @@ def index(request):
 
 def storage(request):
     if request.user.is_authenticated:
-        print("hi")
         page = request.GET.get('page', '1')
         kw = request.GET.get('kw', '')
         url_list = Url.objects.order_by('-create_date')           
         if kw:
             url_list = url_list.filter(
-                Url(link__icontains=kw) | 
-                Url(date__icontains=kw) |  
-                Url(comment__icontains=kw) |  
-                Url(user_id__icontains=kw) 
+                Q(url__icontains=kw) | 
+                Q(date__icontains=kw) |  
+                Q(comment__icontains=kw) |  
+                Q(user_id__icontains=kw) 
             ).distinct()
         paginator = Paginator(url_list, 10) 
         page_obj = paginator.get_page(page)
@@ -46,44 +46,6 @@ def storage(request):
     else:
         return render(request, 'user/login.html')
 
-def create(request):
-    if request.method == 'POST' :
-        form = UrlForm(request.POST)
-        if form.is_valid():
-            url = form.save(commit=False)
-            url.pdfpath = STATICFILES_DIRS[0] + "\\" + str(url.id) #사용자 id
-
-            craw_data_dict = craw(url.url)
-
-            keyword_none = []
-            for item in craw_data_dict:
-                if url.keyword in item['comment']:
-                    keyword_none.append(url.keyword)
-            print(keyword_none)
-            if keyword_none == []:
-                url.keyword = 'None'
-                url.link=item['link']
-                url.user_id='None'
-                url.date='None'
-                url.comment = 'None'
-                url.save()
-
-            for item in craw_data_dict:
-                if url.keyword in item['comment']:    
-                    url_item=Url()          
-                    url_item.url=item['link']
-                    url_item.user_id=item['user_id']
-                    url_item.date=item['date']
-                    url_item.comment = item['comment']
-                    url_item.pdfpath = url.pdfpath
-                    url_item.category = url.category
-                    url_item.keyword = url.keyword
-                    url_item.save()
-
-        return HttpResponseRedirect('/pdfextract/storage/')
->>>>>>> d051de3971e0f9f08cbb239bebf1af48ea61e36e
-    else:
-        return render(request, 'user/login.html')
     
 def create(request):
     if request.user.is_authenticated:
@@ -94,18 +56,34 @@ def create(request):
                 url.pdfpath = STATICFILES_DIRS[0] + "\\" + str(url.id) #사용자 id
 
                 craw_data_dict = craw(url.url)
+                keyword_none = []
+                
                 for item in craw_data_dict:
-                    if url.keyword in item['comment']:    
-                        url_item=Url()          
-                        url_item.url=item['link']
-                        url_item.user_id=item['user_id']
-                        url_item.date=item['date']
-                        url_item.comment = item['comment']
-                        url_item.pdfpath = url.pdfpath
-                        url_item.category = url.category
-                        url_item.keyword = url.keyword
-                        url_item.currentuser = request.user
-                        url_item.save()
+                    if url.keyword in item['comment']:
+                        keyword_none.append(url.keyword)
+                print(keyword_none)
+                if keyword_none == []:
+                    url.keyword = 'None'
+                    url.link=item['link']
+                    url.user_id='None'
+                    url.date='None'
+                    url.comment = 'None'
+                    url.currentuser = request.user
+                    url.save()
+                    
+                else:
+                    for item in craw_data_dict:
+                        if url.keyword in item['comment']:    
+                            url_item=Url()          
+                            url_item.url=item['link']
+                            url_item.user_id=item['user_id']
+                            url_item.date=item['date']
+                            url_item.comment = item['comment']
+                            url_item.pdfpath = url.pdfpath
+                            url_item.category = url.category
+                            url_item.keyword = url.keyword
+                            url_item.currentuser = request.user
+                            url_item.save()
             return HttpResponseRedirect('/pdfextract/storage/')
         else:
             form = UrlForm()
