@@ -27,12 +27,24 @@ def index(request):
     return render(request, 'pdfextract/pdfextract_main.html', {'form':form})
 
 def storage(request):
-    page = request.GET.get('page', '1')
-    url_list = Url.objects.order_by('-create_date')
-    paginator = Paginator(url_list, 10) 
-    page_obj = paginator.get_page(page)
-    context = {'url_list': page_obj}
-    return render(request, 'pdfextract/pdfextract_storage.html', context)
+    if request.user.is_authenticated:
+        print("hi")
+        page = request.GET.get('page', '1')
+        kw = request.GET.get('kw', '')
+        url_list = Url.objects.order_by('-create_date')           
+        if kw:
+            url_list = url_list.filter(
+                Url(link__icontains=kw) | 
+                Url(date__icontains=kw) |  
+                Url(comment__icontains=kw) |  
+                Url(user_id__icontains=kw) 
+            ).distinct()
+        paginator = Paginator(url_list, 10) 
+        page_obj = paginator.get_page(page)
+        context = {'url_list': page_obj, 'page': page, 'kw': kw}
+        return render(request, 'pdfextract/pdfextract_storage.html', context)
+    else:
+        return render(request, 'user/login.html')
 
 def create(request):
     if request.method == 'POST' :
@@ -69,10 +81,38 @@ def create(request):
                     url_item.save()
 
         return HttpResponseRedirect('/pdfextract/storage/')
+>>>>>>> d051de3971e0f9f08cbb239bebf1af48ea61e36e
     else:
-        form = UrlForm()
-        return render(request, 'pdfextract/pdfextract_main.html', {'form':form}) 
+        return render(request, 'user/login.html')
+    
+def create(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = UrlForm(request.POST)
+            if form.is_valid():
+                url = form.save(commit=False)
+                url.pdfpath = STATICFILES_DIRS[0] + "\\" + str(url.id) #사용자 id
 
+                craw_data_dict = craw(url.url)
+                for item in craw_data_dict:
+                    if url.keyword in item['comment']:    
+                        url_item=Url()          
+                        url_item.url=item['link']
+                        url_item.user_id=item['user_id']
+                        url_item.date=item['date']
+                        url_item.comment = item['comment']
+                        url_item.pdfpath = url.pdfpath
+                        url_item.category = url.category
+                        url_item.keyword = url.keyword
+                        url_item.currentuser = request.user
+                        url_item.save()
+            return HttpResponseRedirect('/pdfextract/storage/')
+        else:
+            form = UrlForm()
+            return render(request, 'pdfextract/pdfextract_main.html', {'form':form}) 
+    else:
+        return render(request, 'user/login.html')
+    
 def delete(request,pk):
     url = get_object_or_404(Url,id=pk)
     if request.user.is_authenticated:
@@ -192,29 +232,6 @@ def download(path):
         print(path)
         print("can't download")
         return 0
-    
-def craw_list(request):
-    input_url = request.GET.get('input_url')
-    keyword = request.GET.get('keyword')
-    craw_data_dict = craw(input_url)
-    craw_list=[]
-    for item in craw_data_dict:
-        if keyword in item['comment']:
-                craw_item=Url()
-
-                craw_item.link=item['link']
-                craw_item.user_id=item['user_id']
-                craw_item.date=item['date']
-                craw_item.comment = item['comment']
-                
-                craw_list.append(craw_item)
-
-                context = {
-                    'craw_item' : craw_item, 
-                    'craw_list' : craw_list
-                }
-
-    return render(request, 'craw/craw_list.html', context)
 
 def craw(url):
 
