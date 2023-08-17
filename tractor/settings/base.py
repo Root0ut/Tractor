@@ -134,6 +134,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static') # 생성될 static 파일이 위�
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/pdfextract'
 # 로그아웃시 이동하는 URL
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/user/login'

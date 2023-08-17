@@ -15,6 +15,7 @@ urlpatterns = [
     path('user/', include('user.urls')),
     path('evidence/', include('evidence.urls')),
     path('legalsite/', include('legalsite.urls')),
+    path('myinfo/', include('myinfo.urls')),
     path('pdfextract/', include('pdfextract.urls')),
     path('craw/', include('craw.urls')),
     path('', views.index, name='index'),  
