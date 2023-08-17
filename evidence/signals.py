@@ -9,25 +9,6 @@ from django.dispatch import receiver
 from ipware.ip import get_client_ip
 from user.models import UserLoginLog
 
-@receiver( post_save, sender = Evidence )
-def evidence_save( sender, user, request, **kwargs ):
-    evidence = kwargs[ 'instance' ]
-    evidence_log=UserEvidenceLog()
-    evidence_log.title=evidence.title
-    evidence_log.user=evidence.user
-    evidence_log.created_at=evidence.created_at
-    evidence_log.ip_address = get_client_ip(request)
-
-    print('evidence 생성됨')
-    evidence_log.save()
-
-# def create_profile(sender, instance, created, **kwargs):
-# 	print('시그널 실행')
-# 	if created == True:
-              
-
-# post_save.connect(evidence_save, sender=Evidence)
-
 
 
 

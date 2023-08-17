@@ -45,6 +45,31 @@ def storage(request):
         return render(request, 'pdfextract/pdfextract_storage.html', context)
     else:
         return render(request, 'user/login.html')
+
+def create(request):
+    if request.method == 'POST' :
+        form = UrlForm(request.POST)
+        if form.is_valid():
+            url = form.save(commit=False)
+            url.pdfpath = STATICFILES_DIRS[0] + "\\" + str(url.id) #사용자 id
+
+            craw_data_dict = craw(url.url)
+            for item in craw_data_dict:
+                if url.keyword in item['comment']:    
+                    url_item=Url()          
+                    url_item.url=item['link']
+                    url_item.user_id=item['user_id']
+                    url_item.date=item['date']
+                    url_item.comment = item['comment']
+                    url_item.pdfpath = url.pdfpath
+                    url_item.category = url.category
+                    url_item.keyword = url.keyword
+                    url_item.save()
+
+        return HttpResponseRedirect('/pdfextract/storage/')
+>>>>>>> d051de3971e0f9f08cbb239bebf1af48ea61e36e
+    else:
+        return render(request, 'user/login.html')
     
 def create(request):
     if request.user.is_authenticated:
