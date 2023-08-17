@@ -19,7 +19,6 @@ urlpatterns = [
     path('myinfo/', include('myinfo.urls')),
     path('myinfo/feedback', include('myinfo.urls')),
     path('pdfextract/', include('pdfextract.urls')),
-    path('craw/', include('craw.urls')),
     path('', pdfviews.index, name='index'),  
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

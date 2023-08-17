@@ -30,13 +30,11 @@ def index(request):
 def storage(request):
     if request.user.is_authenticated:
         search_kind=request.GET.get('searchKind','전체')
-        print(search_kind)
         page = request.GET.get('page', '1')
         kw = request.GET.get('kw', '')
         url_list = Url.objects.order_by('-create_date')    
         crimes=['전체', '모욕죄', '명예훼손죄', '음란죄']       
         if kw:
-            print(kw)
             if search_kind == '전체':
                 url_list = url_list.filter(
                     Q(url__icontains=kw) | 
@@ -75,7 +73,6 @@ def create(request):
                 for item in craw_data_dict:
                     if url.keyword in item['comment']:
                         keyword_none.append(url.keyword)
-                print(keyword_none)
                 if keyword_none == []:
                     url.keyword = 'None'
                     url.link=item['link']
@@ -119,7 +116,6 @@ def extract(request):
         url = Url.objects.get(id=i) #id에 맞는 url 값
         p = Url.objects.get(id=i).pdfpath
         d = Url.objects.get(id=i).dflag
-        print(d)
 
         userpath = p + "\\" #C:\projects\mysite\static\None\
         jpgpath = userpath + i
@@ -127,7 +123,6 @@ def extract(request):
         if d == False :
             if not os.path.exists(userpath):
                 os.mkdir(userpath)
-            print(d)
 
             getPNG(str(url)) #전체 화면 캡쳐
             filepath = editPNG(jpgpath) #png -> pdf 변환
@@ -162,7 +157,6 @@ def getPNG(url):
     
     # editPNG(filename,path,id)
     #getPDF(filename)
-    print("getPNG END")
 
     return HttpResponseRedirect('/pdfextract/storage/')
 
@@ -174,7 +168,6 @@ def editPNG(path):
     
     for i in range(0,4):
         f= path + str(i) +'.png'
-        print(f)
         area = (0, h*i, 1480, h*(i+1))
         crop_image = image1.crop(area)
 
@@ -205,7 +198,6 @@ def editPNG(path):
         except OSError as e:
             print("Error: %s : %s" % (p, e.strerror)) 
 
-    print("EDITPNG END")
 
     return filepath
 
@@ -221,8 +213,6 @@ def download(path):
         response['Content-Disposition'] = 'attachment; filename=a.pdf'
         return response
     else:
-        print(path)
-        print("can't download")
         return 0
 
 def craw(url):

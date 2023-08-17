@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'storages',
     'evidence', 
     'pdfextract',
-    'craw',
     'myinfo',
     'user',
     'debug_toolbar'

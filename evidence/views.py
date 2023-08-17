@@ -35,20 +35,17 @@ def write(request):
 @login_required(login_url='/user/login')
 def lists(request):
     search_kind=request.GET.get('searchKind','전체')
-    print(search_kind)
     page = request.GET.get('page', '1')  # 페이지
     kw = request.GET.get('kw', '')  # 검색어
     crimes=['전체', '모욕', '명예훼손', '음란','기타']
     evidence_list = Evidence.objects.filter(user=request.user).order_by('-created_at')
     if kw:
         if search_kind == '전체':
-            print("전체")
             evidence_list = evidence_list.filter(
                 Q(title__icontains=kw) |  
                 Q(content__icontains=kw)
             ).distinct().order_by('-created_at')
         else:
-            print("else")
             evidence_list = evidence_list.filter(
                 Q(crime__icontains=search_kind) &
                 (Q(title__icontains=kw) |  
@@ -109,13 +106,6 @@ def get_second_pw(request):
         if form.is_valid():
             in_pw=form.cleaned_data["pw"].encode('utf-8')
             user = UserSecondPw.objects.filter(user=request.user)
-            if len(user) == 1:
-                if bcrypt.checkpw(in_pw, user[0].pw):
-                    print('일치함')
-                else:
-                    print('일치 X')
-
-
             return HttpResponse(status=204)
     else:
         form = UserSecondForm()
