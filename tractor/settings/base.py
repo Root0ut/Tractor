@@ -2,6 +2,7 @@
 import os
 import environ
 from pathlib import Path
+from django.contrib.messages import constants as message_constants
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -31,6 +32,8 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_S3_ACCESS_KEY_ID  = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_S3_SECRET_ACCESS_KEY  = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+
+MESSAGE_LEVEL = message_constants.DEBUG
 
 
 

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from model_utils.models import TimeStampedModel
 from django.utils.translation import gettext as _
+from django.forms import CharField, Form, PasswordInput
 
 class UserLoginLog(TimeStampedModel):
     user = models.ForeignKey(
@@ -27,3 +28,6 @@ class UserLoginLog(TimeStampedModel):
     def __str__(self):
         return '%s %s' % (self.user, self.ip_address)
 
+class UserSecondPw(models.Model):
+    user=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    pw=models.BinaryField()

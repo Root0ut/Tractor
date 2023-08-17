@@ -12,6 +12,7 @@ class Survey(models.Model):
     status = models.CharField(max_length=1, default='y')
     
 class Answer(models.Model):
+    username=models.TextField(null=True)
     answer_idx=models.AutoField(primary_key=True)
     survey_idx=models.IntegerField()
     num = models.IntegerField()
