@@ -53,7 +53,7 @@
             <input type="radio" name="num" value="5"> {{survey.ans5}}<br>
             <input type="hidden" name="username" value="{{ user.get_username }}">
             <input type="hidden" name="survey_idx" value="{{survey.survey_idx}}">
-            <button type="submit" class="btn text-white mr-2" style="background-color: #782B28; margin-top:20px">투표</button>
+            <button onclick="return confirm('정말 삭제하시겠습니까?');" type="submit" class="btn text-white mr-2" style="background-color: #782B28; margin-top:20px">투표</button>
           
             </form>
     </div>
