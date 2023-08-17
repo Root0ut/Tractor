@@ -43,6 +43,19 @@ def create(request):
 
             craw_data_dict = craw(url.url)
 
+            keyword_none = []
+            for item in craw_data_dict:
+                if url.keyword in item['comment']:
+                    keyword_none.append(url.keyword)
+            print(keyword_none)
+            if keyword_none == []:
+                url.keyword = 'None'
+                url.link=item['link']
+                url.user_id='None'
+                url.date='None'
+                url.comment = 'None'
+                url.save()
+
             for item in craw_data_dict:
                 if url.keyword in item['comment']:    
                     url_item=Url()          
