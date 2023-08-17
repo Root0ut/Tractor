@@ -33,12 +33,10 @@ def evidence_save( sender, user, request, **kwargs ):
 
 @receiver(user_logged_in)
 def sig_user_logged_in(sender, user, request, **kwargs):
-    print('사용자 로그인')
     log = UserLoginLog()
     log.user = user
     client_ip, is_routable = get_client_ip(request)
     log.ip_address = client_ip
-    print(log.ip_address)
     log.user_agent = request.META['HTTP_USER_AGENT']
     log.save()
 
