@@ -39,14 +39,14 @@ def lists(request):
     page = request.GET.get('page', '1')  # 페이지
     kw = request.GET.get('kw', '')  # 검색어
     crimes=['전체', '모욕', '명예훼손', '음란','기타']
-    evidence_list = Evidence.objects.filter(user=request.user)
+    evidence_list = Evidence.objects.filter(user=request.user).order_by('-created_at')
     if kw:
         if search_kind == '전체':
             print("전체")
             evidence_list = evidence_list.filter(
                 Q(title__icontains=kw) |  
                 Q(content__icontains=kw)
-            ).distinct()
+            ).distinct().order_by('-created_at')
         else:
             print("else")
             evidence_list = evidence_list.filter(
@@ -54,13 +54,13 @@ def lists(request):
                 (Q(title__icontains=kw) |  
                 Q(content__icontains=kw) )
                 
-            ).distinct()
+            ).distinct().order_by('-created_at')
     elif search_kind == '전체':
-        evidence_list = Evidence.objects.filter(user=request.user)
+        evidence_list = Evidence.objects.filter(user=request.user).order_by('-created_at')
     else:
         evidence_list = evidence_list.filter( 
                     Q(crime__icontains=search_kind)
-                ).distinct()
+                ).distinct().order_by('-created_at')
 
     paginator = Paginator(evidence_list, 10)  # 페이지당 10개씩 보여주기
     page_obj = paginator.get_page(page)
@@ -77,39 +77,14 @@ def detail(request, pk):
 
 @login_required(login_url='/user/login')
 def delete(request, pk):
-    print("pk"+pk)
-    if request.method == "POST":
-        form = UserSecondForm(request.POST)
-        if form.is_valid():
-            in_pw=form.cleaned_data["pw"].encode('utf-8')
-            user = UserSecondPw.objects.filter(user=request.user)
-            if len(user) == 1:
-                if bcrypt.checkpw(in_pw, user[0].pw):
-                    print('일치함')
-                else:
-                    print('일치 X')
 
-
-            return HttpResponse(status=204)
-    else:
-        form = UserSecondForm()
-    return render(request, 'evidence/evidence_secondform.html', {
-        'form': form,
-    })
-
-
-
-    # evidence=get_object_or_404(Evidence, pk=pk)
-    # if request.user.is_authenticated:
-    #     if request.user==evidence.user:
-    #         user = UserSecondPw.objects.filter(user=request.user)
-    #         if len(user) == 1:
-    #             # bcrypt.checkpw(입력받은 비밀번호, 저장된 비밀번호)
-    #             return user[0]
-            
-    #         evidence.delete()
-    #         return redirect('evidence:lists')
-    # return redirect('evidence:detail', evidence.pk)
+    evidence=get_object_or_404(Evidence, pk=pk)
+    if request.user.is_authenticated:
+        if request.user==evidence.user:
+        
+            evidence.delete()
+            return redirect('evidence:lists')
+    return redirect('evidence:detail', evidence.pk)
 
 @login_required(login_url='/user/login')
 def update(request, pk):

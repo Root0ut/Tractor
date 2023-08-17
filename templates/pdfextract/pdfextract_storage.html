@@ -14,7 +14,7 @@
     <div class="container my-3">
       <div class="row my-3">
         <div class="col-1">
-          <select class="form-select form-select-sm" name="search_kinds" id="search_kind">
+          <select class="form-select form-select-sm" name="search_kinds" id="search_kind" >
               {% for crime in crimes %}
               <option value="{{crime}}" {% if  crime == select_crime %}selected{% endif %}>
               {{crime}}
@@ -27,7 +27,7 @@
             <div class="input-group">
                 <input type="text" id="search_kw" class="form-control" value="{{ kw|default_if_none:'' }}">
                 <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
+                    <button class="btn btn-outline-secondary" type="button" id="btn_search" style=" margin-left:10px">찾기</button>
                 </div>
             </div>
         </div>
@@ -85,11 +85,11 @@
         <!-- 이전페이지 -->
         {% if url_list.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ url_list.previous_page_number }}"href="javascript:void(0)">이전</a>
+            <a class="page-link" data-page="{{ url_list.previous_page_number }}" href="javascript:void(0)">이전</a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="javascript:void(0)">이전</a>
         </li>
         {% endif %}
         <!-- 페이지리스트 -->
@@ -97,11 +97,11 @@
         {% if page_number >= url_list.number|add:-5 and page_number <= url_list.number|add:5 %}
         {% if page_number == url_list.number %}
         <li class="page-item active" aria-current="page">
-            <a class="page-link" href="javascript:void(0)">{{ page_number }}</a>
+            <a class="page-link" data-page="{{ page_number }}" href="javascript:void(0)">{{ page_number }}</a>
         </li>
         {% else %}
         <li class="page-item">
-            <a class="page-link" href="javascript:void(0)">{{ page_number }}</a>
+            <a class="page-link" data-page="{{ page_number }}" href="javascript:void(0)">{{ page_number }}</a>
         </li>
         {% endif %}
         {% endif %}
@@ -109,11 +109,11 @@
         <!-- 다음페이지 -->
         {% if url_list.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ url_list.next_page_number }}"href="javascript:void(0)">다음</a>
+            <a class="page-link" data-page="{{ url_list.next_page_number }}" href="javascript:void(0)">다음</a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="javascript:void(0)">다음</a>
         </li>
         {% endif %}
       </ul>
