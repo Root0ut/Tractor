@@ -52,7 +52,6 @@ def detail(request, pk):
     evidence=Evidence.objects.get(pk=pk)
     return render(request, 'evidence/evidence_detail.html', {'evidence':evidence})
 
-@require_POST
 def delete(request, pk):
     evidence=get_object_or_404(Evidence, pk=pk)
     if request.user.is_authenticated:
