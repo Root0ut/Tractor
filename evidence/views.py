@@ -40,7 +40,6 @@ def lists(request):
     kw = request.GET.get('kw', '')  # 검색어
     crimes=['전체', '모욕', '명예훼손', '음란','기타']
     evidence_list = Evidence.objects.filter(user=request.user).order_by('-created_at')
-
     if kw:
         if search_kind == '전체':
             print("전체")
