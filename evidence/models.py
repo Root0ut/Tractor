@@ -19,6 +19,7 @@ class Evidence(models.Model):
     created_at=models.DateTimeField(auto_now_add=True)
     attached=models.FileField('첨부 파일', upload_to='uploads/', null=True)
     user=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # crime=models.CharField(max_length=200)
     crime=models.CharField(max_length=200, choices=CRIME_CHOICES)
 
 

@@ -11,6 +11,7 @@ from django.db.models import Q
 
 @login_required
 def write(request):
+    # crime_data = request.GET.get('crime')
     if request.method=='GET':
         form=EvidenceForm()
         return render(request, 'evidence/evidence_form.html', {'form':form})
@@ -23,6 +24,7 @@ def write(request):
             if request.FILES.get('file') is not None:
                 evidence.attached=request.FILES["upload"]
             evidence.created_at=timezone.now()
+            # evidence.crime=crime_data
             evidence.save()
             return redirect('evidence:lists')
 

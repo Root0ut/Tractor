@@ -5,7 +5,23 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
+        {% comment %} <select name="crime" id="crime">
+            <option value="모욕">모욕</option>
+            <option value="명예훼손">명예훼손</option>
+            <option value="음란">음란</option>
+            <option value="기타">기타</option>
+        </select> {% endcomment %}
         <button type="submit" class="btn btn-primary">저장하기</button>
     </form>
 </div>
+{% comment %} <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("select[name=crime]").change(function () {
+        $("#crime").submit();
+        console.log('범죄 선택')
+
+        });
+    });
+</script> {% endcomment %}
 {% endblock %}
