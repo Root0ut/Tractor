@@ -50,7 +50,7 @@ def create(request):
                         url.user_id=item['user_id']
                         url.date=item['date']
                         url.comment = item['comment']
-            url.save()
+                        url.save()
         return HttpResponseRedirect('/pdfextract/storage/')
     else:
         form = UrlForm()
