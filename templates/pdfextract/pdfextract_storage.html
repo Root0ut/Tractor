@@ -13,6 +13,16 @@
   <body>
     <div class="container my-3">
       <div class="row my-3">
+        <div class="col-1">
+          <select class="form-select form-select-sm" name="search_kinds" id="search_kind">
+              {% for crime in crimes %}
+              <option value="{{crime}}" {% if  crime == select_crime %}selected{% endif %}>
+              {{crime}}
+              </option>
+              {% endfor %}
+  
+          </select>
+      </div>
         <div class="col-6">
             <div class="input-group">
                 <input type="text" id="search_kw" class="form-control" value="{{ kw|default_if_none:'' }}">
@@ -25,16 +35,16 @@
       <table class="table" style="table-layout: fixed;word-break:break-all;height:auto">
         <thead>
           <tr class="table-dark">
-            <th scope="col" width="4%"> 
+            <th width="4%"> 
               {% comment %} <input type="checkbox" name="pdf_list" value="selectall" onclick="selectAll(this)"> {% endcomment %}
             </th>
-            <th scope="col" width="25%">수집 링크</th>
-            <th scope="col" width="10%">작성자 ID</th>
-            <th scope="col" width="10%">작성일</th>
-            <th scope="col" width="10%">키워드</th>
-            <th scope="col" width="10%">카테고리</th>
-            <th scope="col" width="5%">추출</th>
-            <th scope="col" width="5%">삭제</th>
+            <th width="30%">수집 링크</th>
+            <th width="8%">작성자 ID</th>
+            <th width="12%">작성일</th>
+            <th width="10%">키워드</th>
+            <th width="7%">카테고리</th>
+            <th width="5%">추출</th>
+            <th width="5%">삭제</th>
           </tr>
         </thead>
           {% if url_list %}
@@ -42,16 +52,16 @@
           {% if request.user == url.currentuser %}
           <tbody>
             <tr>
-              <th scope="col"> 
+              <th> 
                 <form method="POST" action="{% url 'pdfextract:extract' %}" enctype="multipart/form-data" class="form-search d-flex align-items-stretch mb-3" data-aos="fade-up" data-aos-delay="200">
                 {% csrf_token %}
                   <input type="checkbox" name="box" value="{{url.id}}">
               </th>
-              <th scope="col">{{ url.url }}</th>
-              <th scope="col">{{ url.user_id }}</th>
-              <th scope="col">{{ url.date }}</th>
-              <th scope="col">{{ url.keyword }}</th>
-              <th scope="col">{{ url.category }}</th>
+              <th style="font-size:14px; font-weight: 100";>{{ url.url }}</th>
+              <th style="font-weight: 100";>{{ url.user_id }}</th>
+              <th style="font-weight: 100";>{{ url.date }}</th>
+              <th style="font-weight: 100";>{{ url.keyword }}</th>
+              <th style="font-weight: 100";>{{ url.category }}</th>
               <td>
                 <button type="submit" name="btn_extract" class="btn btn-primary" style="background-color: #782B28; margin-bottom:10px">추출</button>
               </form>
@@ -64,7 +74,9 @@
         {% endfor %}
 
         {% else %}
-            <p>No URL</p>
+        <tr>
+          <td colspan="8">증거가 없습니다.</td>
+        </tr>
         {% endif %}
         
       </table>
@@ -108,6 +120,7 @@
 <!-- 페이징처리 끝 -->
     <form id="searchForm" method="get" action="{% url 'pdfextract:storage' %}">
       <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
+      <input type="hidden" id="searchKind" name="searchKind" value="{{ searchKind }}">
       <input type="hidden" id="page" name="page" value="{{ page }}">
     </form>
 
@@ -125,9 +138,13 @@ Array.from(page_elements).forEach(function(element) {
 });
 const btn_search = document.getElementById("btn_search");
 btn_search.addEventListener('click', function() {
-    console.log("버튼누름")
     document.getElementById('kw').value = document.getElementById('search_kw').value;
     document.getElementById('page').value = 1;  // 검색버튼을 클릭할 경우 1페이지부터 조회한다.
+    document.getElementById('searchForm').submit();
+
+    var ser = document.getElementById('search_kind')
+    document.getElementById('searchKind').value=ser.options[ser.selectedIndex].value;
+
     document.getElementById('searchForm').submit();
 
 });
