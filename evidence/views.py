@@ -8,10 +8,9 @@ from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator  
 from django.db.models import Q
 
-
 @login_required
 def write(request):
-    # crime_data = request.GET.get('crime')
+
     if request.method=='GET':
         form=EvidenceForm()
         return render(request, 'evidence/evidence_form.html', {'form':form})
@@ -21,8 +20,10 @@ def write(request):
         if form.is_valid():
             evidence=form.save(commit=False)
             evidence.user=request.user
-            if request.FILES.get('file') is not None:
+            if len(request.FILES) != 0:
                 evidence.attached=request.FILES["upload"]
+                evidence.file_name=request.FILES["upload"].name
+            evidence.crime=request.POST.get('crime')
             evidence.created_at=timezone.now()
             # evidence.crime=crime_data
             evidence.save()
@@ -71,5 +72,7 @@ def update(request, pk):
         evidenceForm=EvidenceForm(request.POST, instance=evidence)
         if evidenceForm.is_valid():
             evidence=evidenceForm.save(commit=False)
+            if len(request.FILES) != 0:
+                evidence.attached=request.FILES["upload"]
             evidence.save()
         return redirect('evidence:detail', evidence.pk)
