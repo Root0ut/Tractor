@@ -3,7 +3,7 @@ from myinfo.models import Survey, Answer
 
 
 class AnswerAdmin(admin.ModelAdmin):
-    list_display=("username", "survey_idx", "answer_idx")
+    list_display=("username", "survey_idx", "num")
 class SurveyAdmin(admin.ModelAdmin):
     list_display=("question", "ans1", "ans2", "ans3", "ans4", "ans5", "status")
 
