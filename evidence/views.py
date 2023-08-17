@@ -77,39 +77,14 @@ def detail(request, pk):
 
 @login_required(login_url='/user/login')
 def delete(request, pk):
-    print("pk"+pk)
-    if request.method == "POST":
-        form = UserSecondForm(request.POST)
-        if form.is_valid():
-            in_pw=form.cleaned_data["pw"].encode('utf-8')
-            user = UserSecondPw.objects.filter(user=request.user)
-            if len(user) == 1:
-                if bcrypt.checkpw(in_pw, user[0].pw):
-                    print('일치함')
-                else:
-                    print('일치 X')
 
-
-            return HttpResponse(status=204)
-    else:
-        form = UserSecondForm()
-    return render(request, 'evidence/evidence_secondform.html', {
-        'form': form,
-    })
-
-
-
-    # evidence=get_object_or_404(Evidence, pk=pk)
-    # if request.user.is_authenticated:
-    #     if request.user==evidence.user:
-    #         user = UserSecondPw.objects.filter(user=request.user)
-    #         if len(user) == 1:
-    #             # bcrypt.checkpw(입력받은 비밀번호, 저장된 비밀번호)
-    #             return user[0]
-            
-    #         evidence.delete()
-    #         return redirect('evidence:lists')
-    # return redirect('evidence:detail', evidence.pk)
+    evidence=get_object_or_404(Evidence, pk=pk)
+    if request.user.is_authenticated:
+        if request.user==evidence.user:
+        
+            evidence.delete()
+            return redirect('evidence:lists')
+    return redirect('evidence:detail', evidence.pk)
 
 @login_required(login_url='/user/login')
 def update(request, pk):
