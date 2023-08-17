@@ -46,44 +46,6 @@ def storage(request):
     else:
         return render(request, 'user/login.html')
 
-def create(request):
-    if request.method == 'POST' :
-        form = UrlForm(request.POST)
-        if form.is_valid():
-            url = form.save(commit=False)
-            url.pdfpath = STATICFILES_DIRS[0] + "\\" + str(url.id) #사용자 id
-
-            craw_data_dict = craw(url.url)
-
-            keyword_none = []
-            for item in craw_data_dict:
-                if url.keyword in item['comment']:
-                    keyword_none.append(url.keyword)
-            print(keyword_none)
-            if keyword_none == []:
-                url.keyword = 'None'
-                url.link=item['link']
-                url.user_id='None'
-                url.date='None'
-                url.comment = 'None'
-                url.save()
-
-            for item in craw_data_dict:
-                if url.keyword in item['comment']:    
-                    url_item=Url()          
-                    url_item.url=item['link']
-                    url_item.user_id=item['user_id']
-                    url_item.date=item['date']
-                    url_item.comment = item['comment']
-                    url_item.pdfpath = url.pdfpath
-                    url_item.category = url.category
-                    url_item.keyword = url.keyword
-                    url_item.save()
-
-        return HttpResponseRedirect('/pdfextract/storage/')
-
-    else:
-        return render(request, 'user/login.html')
     
 def create(request):
     if request.user.is_authenticated:
@@ -94,18 +56,34 @@ def create(request):
                 url.pdfpath = STATICFILES_DIRS[0] + "\\" + str(url.id) #사용자 id
 
                 craw_data_dict = craw(url.url)
+                keyword_none = []
+                
                 for item in craw_data_dict:
-                    if url.keyword in item['comment']:    
-                        url_item=Url()          
-                        url_item.url=item['link']
-                        url_item.user_id=item['user_id']
-                        url_item.date=item['date']
-                        url_item.comment = item['comment']
-                        url_item.pdfpath = url.pdfpath
-                        url_item.category = url.category
-                        url_item.keyword = url.keyword
-                        url_item.currentuser = request.user
-                        url_item.save()
+                    if url.keyword in item['comment']:
+                        keyword_none.append(url.keyword)
+                print(keyword_none)
+                if keyword_none == []:
+                    url.keyword = 'None'
+                    url.link=item['link']
+                    url.user_id='None'
+                    url.date='None'
+                    url.comment = 'None'
+                    url.currentuser = request.user
+                    url.save()
+                    
+                else:
+                    for item in craw_data_dict:
+                        if url.keyword in item['comment']:    
+                            url_item=Url()          
+                            url_item.url=item['link']
+                            url_item.user_id=item['user_id']
+                            url_item.date=item['date']
+                            url_item.comment = item['comment']
+                            url_item.pdfpath = url.pdfpath
+                            url_item.category = url.category
+                            url_item.keyword = url.keyword
+                            url_item.currentuser = request.user
+                            url_item.save()
             return HttpResponseRedirect('/pdfextract/storage/')
         else:
             form = UrlForm()
