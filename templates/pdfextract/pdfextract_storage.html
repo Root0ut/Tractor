@@ -14,7 +14,7 @@
     <div class="container my-3">
       <div class="row my-3">
         <div class="col-1">
-          <select class="form-select form-select-sm" name="search_kinds" id="search_kind">
+          <select class="form-select form-select-sm" name="search_kinds" id="search_kind" >
               {% for crime in crimes %}
               <option value="{{crime}}" {% if  crime == select_crime %}selected{% endif %}>
               {{crime}}
@@ -27,7 +27,7 @@
             <div class="input-group">
                 <input type="text" id="search_kw" class="form-control" value="{{ kw|default_if_none:'' }}">
                 <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
+                    <button class="btn btn-outline-secondary" type="button" id="btn_search" style=" margin-left:10px">찾기</button>
                 </div>
             </div>
         </div>
