@@ -27,10 +27,12 @@ def index(request):
     return render(request, 'pdfextract/pdfextract_main.html', {'form':form})
 
 def storage(request):
+    page = request.GET.get('page', '1')
     url_list = Url.objects.order_by('-create_date')
-    context = {'url_list': url_list}
+    paginator = Paginator(url_list, 10) 
+    page_obj = paginator.get_page(page)
+    context = {'url_list': page_obj}
     return render(request, 'pdfextract/pdfextract_storage.html', context)
-
 
 def create(request):
     if request.method == 'POST' :
