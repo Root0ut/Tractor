@@ -1,6 +1,6 @@
 
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 from myinfo.models import Survey, Answer
 from django.views.decorators.csrf import csrf_exempt
@@ -20,4 +20,5 @@ def save_survey(request):
                  survey_idx=request.POST["survey_idx"], num=request.POST["num"])
     dto.save()
     
-    return render(request, "myinfo/success.html")
+
+    return redirect('myinfo:feedback')
