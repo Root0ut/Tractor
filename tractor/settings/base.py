@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'evidence', 
     'pdfextract',
     'craw',
+    'user'
 ]
 
 MIDDLEWARE = [
