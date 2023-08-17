@@ -7,13 +7,12 @@
       <img src="https://tractor-bucket.s3.ap-northeast-2.amazonaws.com/image/logo.png" alt="">
     </a>
     <li class="nav-item"  style="padding-top:8px">
-      <a class="nav-link" href="#">TROLL 추출</a>
+      <a class="nav-link" href="/pdfextract">TROLL 추출</a>
     </li>
     <li class="nav-item"  style="padding-top:8px">
-      <a class="nav-link" href="#">TROLL 보관함</a>
+      <a class="nav-link" href="/evidence/lists">TROLL 보관함</a>
     </li>
   </ul>
-    <!-- 햄버거 버튼 -->
     <button class="navbar-toggler" type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarToggle"
@@ -28,14 +27,14 @@
       <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
       
         <li class="nav-item" >
-          <a class="nav-link" href="#">오늘의 법률</a>
+          <a class="nav-link" href="/legalsite">오늘의 법률</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">내 정보</a>
+          <a class="nav-link" href="/myinfo">내 정보</a>
         </li>
         <li class="nav-item">
           {% if user.is_authenticated %}
-          <a class="nav-link" href="{% url 'user:logout' %}">{{ user.username }} (로그아웃)</a>
+          <a class="nav-link">{{ user.username }} 님 안녕하세요</a>
           {% else %}
           <a class="nav-link" href="{% url 'user:login' %}">로그인</a>
           {% endif %}
